@@ -1,0 +1,46 @@
+#include <iostream>  
+#include "tinyxml2.h"  
+  
+using namespace std;  
+using namespace tinyxml2;  
+  
+int main( int argc, char* argv[] )  
+{  
+    XMLDocument doc;  
+    if ( doc.LoadFile("test.xml") )  
+    {  
+        doc.PrintError();  
+        exit( 1 );  
+    }  
+  
+    // 根元素  
+    XMLElement* scene = doc.RootElement();  
+    cout << "name:" << scene->Attribute( "name" ) << endl << endl;  
+  
+    // 遍历<surface>元素  
+    XMLElement* surface = scene->FirstChildElement( "surface" );  
+    while (surface)  
+    {  
+        // 遍历属性列表  
+        const XMLAttribute* surfaceAttr = surface->FirstAttribute();  
+        while ( surfaceAttr )  
+        {  
+            cout << surfaceAttr->Name() << ":" << surfaceAttr->Value() << "  ";  
+            surfaceAttr = surfaceAttr->Next();  
+        }  
+        cout << endl;  
+  
+        // 遍历子元素  
+        XMLElement* surfaceChild = surface->FirstChildElement();  
+        while (surfaceChild)  
+        {  
+            cout << surfaceChild->Name() << " = " << surfaceChild->GetText() << endl;  
+            surfaceChild = surfaceChild->NextSiblingElement();  
+        }  
+        cout << endl;  
+  
+        surface = surface->NextSiblingElement( "surface" );  
+    }  
+  
+    return 0;  
+}  
